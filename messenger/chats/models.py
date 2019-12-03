@@ -6,41 +6,42 @@ class Chat(models.Model):
     topic = models.CharField(max_length=32, null=False)
     last_message = models.CharField(max_length=65536, null=True)
     is_group_chat = models.BooleanField(default=True)
+    chat_avatar = models.FileField(upload_to='images/', null=True)
 
     class Meta:
-        verbose_name = 'chat'
-        verbose_name_plural = 'chats'
+        verbose_name = 'чат'
+        verbose_name_plural = 'чаты'
 
 
 class Message(models.Model):
-    chat = models.ForeignKey('chats.Chat', on_delete=models.PROTECT)
-    user = models.ForeignKey('userprofile.User', on_delete=models.PROTECT)
+    chat = models.ForeignKey('chats.Chat', on_delete=models.CASCADE)
+    user = models.ForeignKey('userprofile.User', on_delete=models.CASCADE)
     content = models.CharField(max_length=65536, null=True)
-    # added_at = models.DateField()
+    added_at = models.DateTimeField(null=True, auto_now_add=True)
 
     class Meta:
-        verbose_name = 'message'
-        verbose_name_plural = 'messages'
+        verbose_name = 'сообщение'
+        verbose_name_plural = 'сообщения'
 
 
 class Attachment(models.Model):
-    chat = models.ForeignKey('chats.Chat', on_delete=models.PROTECT, null=True)
-    user = models.ForeignKey('userprofile.User', on_delete=models.PROTECT)
-    message = models.ForeignKey('chats.Message', on_delete=models.PROTECT)
+    chat = models.ForeignKey('chats.Chat', on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey('userprofile.User', on_delete=models.CASCADE)
+    message = models.ForeignKey('chats.Message', on_delete=models.CASCADE)
     mime_type = models.CharField(max_length=32)
-    url = models.CharField(max_length=32)
+    url = models.CharField(max_length=64)
 
     class Meta:
-        verbose_name = 'attach'
-        verbose_name_plural = 'attaches'
+        verbose_name = 'вложение'
+        verbose_name_plural = 'вложения'
 
 
 class Member(models.Model):
-    user = models.ForeignKey('userprofile.User', on_delete=models.PROTECT, null=True)
-    chat = models.ManyToManyField('chats.Chat', null=True)
+    user = models.ForeignKey('userprofile.User', on_delete=models.CASCADE, null=False)
+    chat = models.ForeignKey('chats.Chat', null=False,  on_delete=models.CASCADE)
     new_messages = models.CharField(max_length=32, null=True)
-    last_read_message = models.ForeignKey('chats.Message', null=True,  on_delete=models.SET_NULL)
+    last_read_message = models.ForeignKey('chats.Message', null=True,  on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = 'user'
-        verbose_name_plural = 'users'
+        verbose_name = 'участник'
+        verbose_name_plural = 'участники'

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseNotAllowed
 from userprofile.models import User
 from django.forms import forms
+from django.apps import apps
 
 
 def contacts(request, uid):
@@ -18,22 +19,12 @@ def profile(request, uid):
         return JsonResponse({'text': 'profile ' + str(uid)})
     else:
         return HttpResponseNotAllowed(['GET', 'POST'])
-# Create your views here.
 
 
-def user_search(request, name):
+def user_search(request):
     if request.method == 'GET':
-        user_list = list(User.objects.all())
-        name_list = []
-        for i in user_list:
-            if i.nick == name:
-                name_list.append(i.nick)
-        return JsonResponse({'list': name_list})
-        #user_list = list(user_list.get(nick__contains=str(name)))
-        #if user_list is None:
-         #   user_list = []
-        #else:
-        #    user_list = list(user_list)
-        #return JsonResponse({'list': user_list})
+        print(list(request.GET))
+        users = User.objects.filter(username__contains=request.GET.get('name')).values('id', 'username', 'first_name')
+        return JsonResponse({'users': list(users)})
     else:
         return HttpResponseNotAllowed(['GET'])

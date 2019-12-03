@@ -9,5 +9,5 @@ class User(AbstractUser):
     avatar = models.CharField(max_length=32, null=True, blank=True)
 
     class Meta:
-        verbose_name = 'user'
-        verbose_name_plural = 'users'
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
