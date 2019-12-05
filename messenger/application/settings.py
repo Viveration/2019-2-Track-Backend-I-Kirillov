@@ -25,18 +25,29 @@ SECRET_KEY = 'vh7bd_f!xs43tpee17221zu+^21zmz=35e4b2lrtiokm+^($ny'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
-#LOGIN_URL = 'login'
-#LOGIN_REDIRECT_URL ='home'
-#LOGOUT_URL = 'logout'
-#LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_URL = 'logout'
+LOGOUT_REDIRECT_URL = 'login'
 
 #SOCIAL_AUTH_FACEBOOK_KEY = ''
 #SOCIAL_AUTH_FACEBOOK_SECRET = ''
 
-#STATICFILES_DIRS = [os.path.join()]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+SOCIAL_AUTH_VK_OAUTH2_KEY = '7234552'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'yahmbqU7FzQTGZb7GcKO'
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_VK_PROFILE_EXTRA_PARAMS = {
+    'locale' : 'ru_RU',
+    'fields' : 'id, name, email, age_range',
+}
 
 # Application definition
+ALLOWED_HOSTS = ['10.0.2.15', '192.168.0.106', '127.0.0.1', 'backend']
 AUTH_USER_MODEL = 'userprofile.User'
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,8 +57,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'chats',
+    'blog',
     'userprofile',
-    #'socialdjango'
+    'social_django'
 ]
 
 MIDDLEWARE = [
@@ -73,13 +85,20 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'application.wsgi.application'
-
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.linkedin.LinkedinOAuth2',
+    'social_core.backends.instagram.InstagramOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.vk.VKOAuth2',
+]
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

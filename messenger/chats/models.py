@@ -4,7 +4,7 @@ from django.db import models
 
 class Chat(models.Model):
     topic = models.CharField(max_length=32, null=False)
-    last_message = models.CharField(max_length=65536, null=True)
+    last_message = models.OneToOneField('chats.Message', on_delete=models.SET_NULL, null=True, related_name='Chat')
     is_group_chat = models.BooleanField(default=True)
     chat_avatar = models.FileField(upload_to='images/', null=True)
 
@@ -39,8 +39,8 @@ class Attachment(models.Model):
 class Member(models.Model):
     user = models.ForeignKey('userprofile.User', on_delete=models.CASCADE, null=False)
     chat = models.ForeignKey('chats.Chat', null=False,  on_delete=models.CASCADE)
-    new_messages = models.CharField(max_length=32, null=True)
-    last_read_message = models.ForeignKey('chats.Message', null=True,  on_delete=models.CASCADE)
+    new_messages = models.IntegerField(null=True, default=0)
+    last_read_message = models.ForeignKey('chats.Message', null=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'участник'
